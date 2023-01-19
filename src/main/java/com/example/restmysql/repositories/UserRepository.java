@@ -9,5 +9,5 @@ import java.util.ArrayList;
 @Repository
 public interface UserRepository extends CrudRepository<UserModel, Long> {
     ArrayList<UserModel> findByClientGroup(char clientGroup);
-    ArrayList<UserModel> findByClientGroupWhereNameIsNotNull(char clientGroup);
+    ArrayList<UserModel> findByEmail(String email);
 }

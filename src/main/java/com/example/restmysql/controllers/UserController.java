@@ -1,14 +1,15 @@
 package com.example.restmysql.controllers;
 
+import com.example.restmysql.exceptions.RequestException;
+import com.example.restmysql.exceptions.UserNotFoundException;
 import com.example.restmysql.models.UserModel;
 import com.example.restmysql.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
-import java.util.Dictionary;
-import java.util.Hashtable;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/users")
@@ -17,36 +18,46 @@ public class UserController {
     UserService userService;
 
     @GetMapping()
-    public ArrayList<UserModel> listUsers() {
-        return userService.listUsers();
+    public ResponseEntity<ArrayList<UserModel>> listUsers(
+            @RequestParam(value = "clientGroup", defaultValue = "\0", required = false) char clientGroup,
+            @RequestParam(value = "email", defaultValue = "", required = false) String email
+    ) {
+        ArrayList<UserModel> users = null;
+        if (clientGroup != '\0') {
+            users = userService.listByClientGroup(clientGroup);
+        }
+
+        if (!email.isEmpty()) {
+            users = userService.listByEmail(email);
+        }
+
+        // No queryparams return all list of users
+        if (clientGroup == '\0' && email.isEmpty()) {
+            users = userService.listUsers();
+        }
+
+        return new ResponseEntity<>(users, HttpStatus.OK);
     }
 
     @PostMapping(consumes = {"application/json"})
     public UserModel postUser(@RequestBody UserModel user) {
+        if (user.getEmail().equals("") || user.getEmail() == null) {
+            throw new RequestException("Email is required", HttpStatus.BAD_REQUEST);
+        }
         return this.userService.postUser(user);
     }
 
     @GetMapping(path = "/{id}")
-    public Optional<UserModel> retrieveUserById(@PathVariable("id") Long id) {
-        return this.userService.retrieveById(id);
-    }
-
-    @GetMapping("/query")
-    public ArrayList<UserModel> listUsersByClientGroup(@RequestParam("clientGroup") char clientGroup) {
-        return this.userService.listByClientGroup(clientGroup);
+    public ResponseEntity<UserModel> retrieveUserById(@PathVariable("id") Long id) {
+        UserModel user = userService.retrieveById(id).orElseThrow(() -> new UserNotFoundException(id));
+        return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
     @DeleteMapping(path = "/{id}")
-    public Dictionary deleteById(@PathVariable("id") Long id) {
-        boolean ok = this.userService.deleteUser(id);
-        Dictionary dict = new Hashtable();
-
-        if (!ok) {
-            dict.put("Detail", "User with id " + id + " does not exist");
-            return dict;
+    public ResponseEntity deleteById(@PathVariable("id") Long id) {
+        if (!this.userService.deleteUser(id)) {
+            throw new UserNotFoundException(id);
         }
-
-        dict.put("Detail", "Deleted user with id " + id);
-        return dict;
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
