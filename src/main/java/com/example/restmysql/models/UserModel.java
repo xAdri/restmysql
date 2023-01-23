@@ -26,4 +26,6 @@ public class UserModel implements Serializable {
     private LocalDate entryDate;
     private char clientGroup;
     private String city;
+    @Column (nullable = false)
+    private String password;
 }
