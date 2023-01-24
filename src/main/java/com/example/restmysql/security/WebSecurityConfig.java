@@ -25,15 +25,13 @@ public class WebSecurityConfig {
 
         JWTAuthenticationFilter jwtAuthenticationFilter = new JWTAuthenticationFilter();
         jwtAuthenticationFilter.setAuthenticationManager(authManager);
-        jwtAuthenticationFilter.setFilterProcessesUrl("/login");
+        jwtAuthenticationFilter.setFilterProcessesUrl("/auth/login");
 
         return http
                 .csrf().disable() // Deshabilitar cross side request forgget
                 .authorizeRequests() // Reglas de las solicitudes
                 .anyRequest() // Cualquier solicitud necesita auth
                 .authenticated()
-                .and()
-                .httpBasic() // Autenticacion basica user pass
                 .and()
                 .sessionManagement() // Gestion de las sesiones
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS) // Sesiones sin estados
@@ -42,7 +40,6 @@ public class WebSecurityConfig {
                 .addFilterBefore(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
-    
 
     @Bean
     AuthenticationManager authManager(HttpSecurity http, PasswordEncoder passwordEncoder) throws Exception {
@@ -52,6 +49,7 @@ public class WebSecurityConfig {
                 .and()
                 .build();
     }
+
 
     @Bean
     PasswordEncoder passwordEncoder() {

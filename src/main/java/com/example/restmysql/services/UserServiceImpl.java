@@ -35,12 +35,15 @@ public class UserServiceImpl implements UserService {
     }
 
     public boolean deleteUser(Long id) {
-
         try {
             userRepository.deleteById(id);
         } catch (Exception err) {
             return false;
         }
         return true;
+    }
+
+    public Optional<UserModel> retrieveByEmail(String email) {
+        return userRepository.findOneByEmail(email);
     }
 }
