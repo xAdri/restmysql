@@ -20,11 +20,22 @@ public class Response {
         private String message;
     }
 
+    @Data
+    @AllArgsConstructor(access = AccessLevel.PRIVATE)
+    static class Created {
+        private long createdCode;
+        private String message;
+    }
+
     public static Response noErrorResponse() {
         return new Response(new Error(NO_ERROR, NO_MESSAGE));
     }
 
     public static Response errorResponse(int errorCode, String errorMessage) {
         return new Response(new Error(errorCode, errorMessage));
+    }
+
+    public static Response createdResponse(int createdCode, String createdMessage) {
+        return new Response(new Error(createdCode, createdMessage));
     }
 }

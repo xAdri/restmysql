@@ -3,6 +3,7 @@ package com.example.restmysql.services;
 import com.example.restmysql.models.UserModel;
 import com.example.restmysql.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -19,6 +20,11 @@ public class UserServiceImpl implements UserService {
     }
 
     public UserModel postUser(UserModel user) {
+        // TODO: Asignarle la password y mandarla por mail
+
+        // TODO: Password se pasa en la request y se encripta
+        String encrypted_password = new BCryptPasswordEncoder().encode(user.getPassword());
+        user.setPassword(encrypted_password);
         return userRepository.save(user);
     }
 

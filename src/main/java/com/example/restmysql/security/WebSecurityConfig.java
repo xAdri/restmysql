@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -25,11 +26,14 @@ public class WebSecurityConfig {
 
         JWTAuthenticationFilter jwtAuthenticationFilter = new JWTAuthenticationFilter();
         jwtAuthenticationFilter.setAuthenticationManager(authManager);
-        jwtAuthenticationFilter.setFilterProcessesUrl("/auth/login");
+        jwtAuthenticationFilter.setFilterProcessesUrl("/auth/*");
+
 
         return http
                 .csrf().disable() // Deshabilitar cross side request forgget
-                .authorizeRequests() // Reglas de las solicitudes
+                .authorizeHttpRequests() // Reglas de las solicitudes
+                .requestMatchers("/auth/**")
+                .permitAll()
                 .anyRequest() // Cualquier solicitud necesita auth
                 .authenticated()
                 .and()
@@ -40,6 +44,14 @@ public class WebSecurityConfig {
                 .addFilterBefore(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
+
+
+    @Bean
+    public WebSecurityCustomizer webSecurityCustomizer() {
+        // Here add url to allow request without token
+        return (web) -> web.ignoring().requestMatchers("/auth/register");
+    }
+
 
     @Bean
     AuthenticationManager authManager(HttpSecurity http, PasswordEncoder passwordEncoder) throws Exception {
@@ -60,4 +72,5 @@ public class WebSecurityConfig {
     public static void main(String[] args) {
         System.out.println("pass: " + new BCryptPasswordEncoder().encode("admin"));
     }
+
 }
