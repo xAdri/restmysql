@@ -32,10 +32,11 @@ public class WebSecurityConfig {
         return http
                 .csrf().disable() // Deshabilitar cross side request forgget
                 .authorizeHttpRequests() // Reglas de las solicitudes
-                .requestMatchers("/auth/**")
-                .permitAll()
+                //.requestMatchers("/auth/**")
+                //.permitAll()
                 .anyRequest() // Cualquier solicitud necesita auth
-                .authenticated()
+                .permitAll()
+                //.authenticated()
                 .and()
                 .sessionManagement() // Gestion de las sesiones
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS) // Sesiones sin estados
