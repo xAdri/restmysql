@@ -1,6 +1,7 @@
 package com.example.restmysql.mappers;
 
 import com.example.restmysql.dto.UserDTO;
+import com.example.restmysql.dto.UserMinimalDTO;
 import com.example.restmysql.models.UserModel;
 
 import java.util.ArrayList;
@@ -37,5 +38,14 @@ public class UserMapper {
         }
 
         return userDTOs;
+    }
+
+    public static UserMinimalDTO toMinimalDto(UserModel user) {
+        UserMinimalDTO userMinimalDTO = new UserMinimalDTO();
+
+        userMinimalDTO.setId(user.getId());
+        userMinimalDTO.setEmail(user.getEmail());
+
+        return userMinimalDTO;
     }
 }
