@@ -6,6 +6,7 @@ import lombok.Setter;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Table(name = "users")
@@ -28,4 +29,6 @@ public class UserModel implements Serializable {
     private String city;
     @Column (nullable = false)
     private String password;
+    @OneToMany(cascade = CascadeType.REMOVE, orphanRemoval = true, mappedBy = "user")
+    private List<PlaylistModel> playlistList;
 }

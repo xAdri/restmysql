@@ -20,9 +20,9 @@ public class UserServiceImpl implements UserService {
     }
 
     public UserModel postUser(UserModel user) {
-        // TODO: Asignarle la password y mandarla por mail
+        // Asignarle la password y mandarla por mail
 
-        // TODO: Password se pasa en la request y se encripta
+        // Password se pasa en la request y se encripta
         String encrypted_password = new BCryptPasswordEncoder().encode(user.getPassword());
         user.setPassword(encrypted_password);
         return userRepository.save(user);

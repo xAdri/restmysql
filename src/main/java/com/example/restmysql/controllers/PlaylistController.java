@@ -1,5 +1,6 @@
 package com.example.restmysql.controllers;
 
+import com.example.restmysql.dto.PlaylistCreateDTO;
 import com.example.restmysql.dto.PlaylistDTO;
 import com.example.restmysql.dto.PlaylistMinimalDTO;
 import com.example.restmysql.mappers.PlaylistMapper;
@@ -29,11 +30,11 @@ public class PlaylistController {
     @GetMapping()
     public ResponseEntity<ArrayList<PlaylistMinimalDTO>> listPlaylists() {
         ArrayList<PlaylistModel> playlists = playlistService.listPlaylists();
-        return new ResponseEntity<>(PlaylistMapper.toDtoArrayList(playlists), HttpStatus.OK);
+        return new ResponseEntity<>(PlaylistMapper.toDtoUserArrayList(playlists), HttpStatus.OK);
     }
 
     @PostMapping(path = "/create", consumes = {"application/json"})
-    public ResponseEntity<PlaylistDTO> postUser(@RequestBody PlaylistModel playlist, Authentication auth) {
+    public ResponseEntity<PlaylistCreateDTO> postUser(@RequestBody PlaylistModel playlist, Authentication auth) {
 
         PlaylistModel new_playlist = new PlaylistModel(playlist.getName(), playlist.getDuration());
         String email = auth.getPrincipal().toString();
@@ -42,5 +43,18 @@ public class PlaylistController {
         new_playlist.setUser(user.orElse(new UserModel()));
         playlistService.postPlaylist(new_playlist);
         return new ResponseEntity<>(PlaylistMapper.toDto(new_playlist), HttpStatus.CREATED);
+    }
+
+    @GetMapping(path = "/me")
+    public ResponseEntity<ArrayList<PlaylistDTO>> retrieveUserLoggedPlaylists(Authentication auth) {
+        String email = auth.getPrincipal().toString();
+        ArrayList<PlaylistModel> playlists = playlistService.retrieveByUserEmail(email);
+        return new ResponseEntity<>(PlaylistMapper.toDtoArrayList(playlists), HttpStatus.OK);
+    }
+
+    @GetMapping(path = "/{id}")
+    public ResponseEntity<ArrayList<PlaylistDTO>> retrieveUserPlaylists(@PathVariable("id") Long id) {
+        ArrayList<PlaylistModel> playlists = playlistService.retrieveByUserId(id);
+        return new ResponseEntity<>(PlaylistMapper.toDtoArrayList(playlists), HttpStatus.OK);
     }
 }

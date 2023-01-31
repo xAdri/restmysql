@@ -17,5 +17,4 @@ public class UserDTO {
     private String city;
     private String address;
     private char clientGroup;
-
 }

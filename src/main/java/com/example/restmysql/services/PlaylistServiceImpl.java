@@ -19,7 +19,16 @@ public class PlaylistServiceImpl implements PlaylistService {
 
     @Override
     public PlaylistModel postPlaylist(PlaylistModel playlist) {
-        // TODO: Agregar automaticamente la id del usuario que hace la llamada
         return playlistRepository.save(playlist);
+    }
+
+    @Override
+    public ArrayList<PlaylistModel> retrieveByUserEmail(String email) {
+        return playlistRepository.findByUserEmail(email);
+    }
+
+    @Override
+    public ArrayList<PlaylistModel> retrieveByUserId(Long id) {
+        return playlistRepository.findByUserId(id);
     }
 }

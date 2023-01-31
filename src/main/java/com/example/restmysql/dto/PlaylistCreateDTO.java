@@ -7,8 +7,7 @@ import lombok.Setter;
 @Data
 @Getter
 @Setter
-public class PlaylistDTO {
-    private Long id;
+public class PlaylistCreateDTO {
     private String name;
     private Double duration;
 }

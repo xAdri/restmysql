@@ -10,4 +10,7 @@ public interface PlaylistService {
 
     PlaylistModel postPlaylist(PlaylistModel playlist);
 
+    ArrayList<PlaylistModel> retrieveByUserEmail(String email);
+
+    ArrayList<PlaylistModel> retrieveByUserId(Long id);
 }

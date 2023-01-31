@@ -8,5 +8,6 @@ import java.util.ArrayList;
 
 @Repository
 public interface PlaylistRepository extends CrudRepository<PlaylistModel, Long> {
-    ArrayList<PlaylistModel> findByUser(Long id);
+    ArrayList<PlaylistModel> findByUserEmail(String email);
+    ArrayList<PlaylistModel> findByUserId(Long id);
 }
