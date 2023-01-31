@@ -10,6 +10,6 @@ import lombok.Setter;
 public class PlaylistMinimalDTO {
     private Long id;
     private String name;
-    private Double duration;
+    private String duration;
     private UserMinimalDTO user;
 }

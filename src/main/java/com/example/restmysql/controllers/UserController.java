@@ -1,7 +1,6 @@
 package com.example.restmysql.controllers;
 
 import com.example.restmysql.dto.UserDTO;
-import com.example.restmysql.exceptions.RequestException;
 import com.example.restmysql.exceptions.UserNotFoundException;
 import com.example.restmysql.mappers.UserMapper;
 import com.example.restmysql.models.UserModel;
@@ -62,6 +61,6 @@ public class UserController {
         if (!this.userService.deleteUser(id)) {
             throw new UserNotFoundException(id);
         }
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 }

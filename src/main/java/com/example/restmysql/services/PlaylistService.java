@@ -13,4 +13,8 @@ public interface PlaylistService {
     ArrayList<PlaylistModel> retrieveByUserEmail(String email);
 
     ArrayList<PlaylistModel> retrieveByUserId(Long id);
+
+    PlaylistModel retrieveById(Long id);
+
+    boolean deletePlaylist(Long id);
 }

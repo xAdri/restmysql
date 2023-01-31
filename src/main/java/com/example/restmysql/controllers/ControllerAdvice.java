@@ -1,5 +1,7 @@
 package com.example.restmysql.controllers;
 
+import com.example.restmysql.exceptions.PlaylistNotFoundException;
+import com.example.restmysql.exceptions.UnauthorizedDeleteException;
 import com.example.restmysql.response.Response;
 import com.example.restmysql.exceptions.RequestException;
 import com.example.restmysql.exceptions.UserNotFoundException;
@@ -27,6 +29,22 @@ public class ControllerAdvice {
     public ResponseEntity<Response> userHandleException(UserNotFoundException ex) {
         Response response = Response.errorResponse(HttpStatus.NOT_FOUND.value(), ex.getMessage());
         return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(value = PlaylistNotFoundException.class)
+    @ResponseBody
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ResponseEntity<Response> playlistHandleException(PlaylistNotFoundException ex) {
+        Response response = Response.errorResponse(HttpStatus.NOT_FOUND.value(), ex.getMessage());
+        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(value = UnauthorizedDeleteException.class)
+    @ResponseBody
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public ResponseEntity<Response> deleteHandleException(UnauthorizedDeleteException ex) {
+        Response response = Response.errorResponse(HttpStatus.UNAUTHORIZED.value(), ex.getMessage());
+        return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
     }
 
 }
