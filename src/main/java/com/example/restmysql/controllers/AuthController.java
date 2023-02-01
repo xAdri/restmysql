@@ -23,8 +23,11 @@ public class AuthController {
     @PostMapping(path = "/register", consumes = {"application/json"})
     public ResponseEntity<UserDTO> postUser(@RequestBody UserModel user) {
         if (user.getEmail().equals("") || user.getEmail() == null) {
-            // TODO: Add new validators
             throw new RequestException("Email is required", HttpStatus.BAD_REQUEST);
+        }
+
+        if (user.getPassword().equals("") || user.getPassword() == null) {
+            throw new RequestException("Password is required", HttpStatus.BAD_REQUEST);
         }
         UserModel new_user = userService.postUser(user);
         return new ResponseEntity<>(UserMapper.toDto(new_user), HttpStatus.CREATED);

@@ -29,6 +29,10 @@ public class UserModel implements Serializable {
     private String city;
     @Column (nullable = false)
     private String password;
-    @OneToMany(cascade = CascadeType.REMOVE, orphanRemoval = true, mappedBy = "user")
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<PlaylistModel> playlistList;
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY, optional = true)
+    private ArtistModel artist;
 }
